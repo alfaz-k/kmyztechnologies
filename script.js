@@ -44,7 +44,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const pwaToastTitle = document.getElementById("pwaToastTitle");
   let deferredPrompt = null;
 
-  // Show Toast Alert automatically after 3.5 seconds if not dismissed in session
   if (!sessionStorage.getItem("pwa_toast_dismissed")) {
     setTimeout(() => {
       if (pwaToastAlert) {
@@ -53,7 +52,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }, 3500);
   }
 
-  // Capture PWA Install Event
   window.addEventListener("beforeinstallprompt", (e) => {
     e.preventDefault();
     deferredPrompt = e;
@@ -110,6 +108,14 @@ document.addEventListener("DOMContentLoaded", () => {
   const footerMapBtn = document.getElementById("footerMapBtn");
   const drawerMapTrigger = document.getElementById("drawerMapTrigger");
   const mapModalCloseBtn = document.getElementById("mapModalCloseBtn");
+
+  // Custom Select Modal Elements
+  const customSelectOverlay = document.getElementById("customSelectOverlay");
+  const customSelectCloseBtn = document.getElementById("customSelectCloseBtn");
+  const customSelectList = document.getElementById("customSelectList");
+  const customSelectModalTitle = document.getElementById("customSelectModalTitle");
+  const customSelectModalSubtitle = document.getElementById("customSelectModalSubtitle");
+  const customSelectIcon = document.getElementById("customSelectIcon");
 
   // Dynamic Year
   if (currentYearSpan) {
@@ -298,7 +304,11 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   document.addEventListener("keydown", (e) => {
-    if (e.key === "Escape" && searchOverlay.classList.contains("active")) closeSearch();
+    if (e.key === "Escape") {
+      if (searchOverlay.classList.contains("active")) closeSearch();
+      if (customSelectOverlay.classList.contains("active")) closeCustomSelectModal();
+      if (mapModalOverlay.classList.contains("active")) closeMapModal();
+    }
   });
 
   filterChips.forEach((chip) => {
@@ -362,7 +372,115 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // 7. Google Maps Modal Logic
+  // 7. Custom Selection Modals (Replaces default select popup with Image 2 UI)
+  const dropdownDatasets = {
+    techCourse: {
+      title: "Select Course of Interest",
+      subtitle: "Choose your specialization",
+      icon: "fa-solid fa-graduation-cap",
+      displayTarget: document.getElementById("tech-course-display"),
+      hiddenTarget: document.getElementById("tech-course"),
+      options: [
+        { name: "SAP ERP FICO (ECC & S/4 HANA)", sub: "Finance & Cost Controlling", tag: "SAP ERP" },
+        { name: "SAP ERP MM (ECC & S/4 HANA)", sub: "Materials Management", tag: "SAP ERP" },
+        { name: "SAP ERP SD (ECC & S/4 HANA)", sub: "Sales & Distribution", tag: "SAP ERP" },
+        { name: "SAP EWM Module (S/4 HANA)", sub: "Extended Warehouse Management", tag: "SAP ERP" },
+        { name: "Tally ERP 10.0 / Prime", sub: "Accounting & GST Billing", tag: "ERP Prime" },
+        { name: "Java Full Stack Development", sub: "Core Java & OOPs Concepts", tag: "Coding" },
+        { name: "Python Programming", sub: "Data Structures & Automation", tag: "Coding" },
+        { name: "\"C\" & C++ Programming", sub: "Logic & OOPs Fundamentals", tag: "Coding" },
+        { name: "MS Access Database & Reports", sub: "Forms, Queries & Database", tag: "Advanced" },
+        { name: "MS Excel Advance Concepts", sub: "Formulas, Macros & Charts", tag: "Advanced" },
+        { name: "Basic Computer Concepts", sub: "Word, PPT & Office Basics", tag: "Basic" },
+        { name: "Corporate / Campus Training", sub: "Custom Institution Packages", tag: "Corporate" }
+      ]
+    },
+    techMode: {
+      title: "Select Learning Mode",
+      subtitle: "Choose classroom or online live sessions",
+      icon: "fa-solid fa-chalkboard-user",
+      displayTarget: document.getElementById("tech-mode-display"),
+      hiddenTarget: document.getElementById("tech-mode"),
+      options: [
+        { name: "Offline Classroom (Ballari)", sub: "Hands-on lab training & 1-on-1 mentoring", tag: "Classroom" },
+        { name: "Online Live Training", sub: "Interactive remote live sessions", tag: "Online" }
+      ]
+    },
+    catMenu: {
+      title: "Select Primary Specialty",
+      subtitle: "Authentic Ballari food & bulk orders",
+      icon: "fa-solid fa-utensils",
+      displayTarget: document.getElementById("cat-menu-display"),
+      hiddenTarget: document.getElementById("cat-menu-item"),
+      options: [
+        { name: "Ballari Special Jigri", sub: "Traditional slow-cooked local delicacy", tag: "Specialty" },
+        { name: "Mutton / Chicken Dum Biryani", sub: "Rich authentic Dum preparation", tag: "Signature" },
+        { name: "Chicken Mandi / Afghani Pulav", sub: "Arabian styled feast & aromatic rice", tag: "Royal" },
+        { name: "Mutton Nihari / Margh / Tahari", sub: "Rich gravies & tender meat preparations", tag: "Authentic" },
+        { name: "Snacks, Pasta & Burgers Combo", sub: "Pav Bhaji, Chole Bhature, Burgers", tag: "Snacks" },
+        { name: "Bulk Party / Event Catering", sub: "Full customized catering for functions", tag: "Event" }
+      ]
+    }
+  };
+
+  // Pre-set Default Form Values
+  if (dropdownDatasets.techMode.displayTarget) {
+    dropdownDatasets.techMode.displayTarget.value = "Offline Classroom (Ballari)";
+  }
+
+  function openCustomSelectModal(datasetKey) {
+    const config = dropdownDatasets[datasetKey];
+    if (!config) return;
+
+    customSelectModalTitle.textContent = config.title;
+    customSelectModalSubtitle.textContent = config.subtitle;
+    customSelectIcon.className = `${config.icon} custom-select-header-icon`;
+
+    const currentValue = config.hiddenTarget.value;
+
+    customSelectList.innerHTML = config.options.map((opt) => `
+      <div class="select-option-item ${currentValue === opt.name ? 'selected' : ''}" data-val="${opt.name}">
+        <div class="select-option-text">
+          <span class="select-option-name">${opt.name}</span>
+          <span class="select-option-sub">${opt.sub}</span>
+        </div>
+        <span class="select-option-badge">${opt.tag}</span>
+      </div>
+    `).join("");
+
+    customSelectOverlay.classList.add("active");
+    document.body.style.overflow = "hidden";
+
+    document.querySelectorAll(".select-option-item").forEach((item) => {
+      item.addEventListener("click", () => {
+        const val = item.getAttribute("data-val");
+        config.displayTarget.value = val;
+        config.hiddenTarget.value = val;
+        closeCustomSelectModal();
+      });
+    });
+  }
+
+  function closeCustomSelectModal() {
+    customSelectOverlay.classList.remove("active");
+    document.body.style.overflow = "";
+  }
+
+  // Bind Triggers
+  const techCourseTrigger = document.getElementById("techCourseTrigger");
+  const techModeTrigger = document.getElementById("techModeTrigger");
+  const catMenuTrigger = document.getElementById("catMenuTrigger");
+
+  if (techCourseTrigger) techCourseTrigger.addEventListener("click", () => openCustomSelectModal("techCourse"));
+  if (techModeTrigger) techModeTrigger.addEventListener("click", () => openCustomSelectModal("techMode"));
+  if (catMenuTrigger) catMenuTrigger.addEventListener("click", () => openCustomSelectModal("catMenu"));
+
+  if (customSelectCloseBtn) customSelectCloseBtn.addEventListener("click", closeCustomSelectModal);
+  customSelectOverlay.addEventListener("click", (e) => {
+    if (e.target === customSelectOverlay) closeCustomSelectModal();
+  });
+
+  // 8. Google Maps Modal Logic
   function openMapModal() {
     mapModalOverlay.classList.add("active");
     document.body.style.overflow = "hidden";
@@ -386,7 +504,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (e.target === mapModalOverlay) closeMapModal();
   });
 
-  // 8. Live Day-of-the-Week Menu Highlighter
+  // 9. Live Day-of-the-Week Menu Highlighter
   function highlightTodayMenu() {
     const today = new Date().getDay();
     const cardMonSat = document.getElementById("card-mon-sat");
@@ -414,7 +532,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
   highlightTodayMenu();
 
-  // 9. Interactive Catering Event Cost & Portion Estimator Logic
+  // 10. Interactive Catering Event Cost & Portion Estimator Logic
   const guestSlider = document.getElementById("guestSlider");
   const guestCountDisplay = document.getElementById("guestCountDisplay");
   const calcPerPlateRate = document.getElementById("calcPerPlateRate");
@@ -441,7 +559,6 @@ document.addEventListener("DOMContentLoaded", () => {
         perPlateTotal += price;
         selectedDishes.push({ name, price, portion });
 
-        // Calculate estimated bulk quantity
         let bulkEstimate = `${guests} servings`;
         if (portion.includes("350g")) {
           const totalKg = ((guests * 350) / 1000).toFixed(1);
@@ -488,7 +605,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // 10. Dynamic Captcha Generator
+  // 11. Dynamic Captcha Generator
   let generatedTechCaptcha = "";
   let generatedCateringCaptcha = "";
 
@@ -555,7 +672,7 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("cateringCaptchaError").classList.remove("visible");
   });
 
-  // 11. Form Validation & WhatsApp Redirection
+  // 12. Form Validation & WhatsApp Redirection
   const techForm = document.getElementById("techEnrollForm");
   if (techForm) {
     techForm.addEventListener("submit", (e) => {
@@ -563,6 +680,13 @@ document.addEventListener("DOMContentLoaded", () => {
       const userInput = document.getElementById("techCaptchaInput").value.trim().toUpperCase();
       const errorMsg = document.getElementById("techCaptchaError");
       const captchaField = document.getElementById("techCaptchaInput");
+      const courseVal = document.getElementById("tech-course").value;
+
+      if (!courseVal) {
+        alert("Please select a Course of Interest.");
+        openCustomSelectModal("techCourse");
+        return;
+      }
 
       if (userInput !== generatedTechCaptcha) {
         errorMsg.textContent = "Invalid verification code! Please try again.";
@@ -584,6 +708,10 @@ document.addEventListener("DOMContentLoaded", () => {
       window.open(`https://wa.me/919591509362?text=${message}`, "_blank");
       
       techForm.reset();
+      document.getElementById("tech-course-display").value = "";
+      document.getElementById("tech-course").value = "";
+      document.getElementById("tech-mode-display").value = "Offline Classroom (Ballari)";
+      document.getElementById("tech-mode").value = "Offline Classroom (Ballari)";
       generatedTechCaptcha = generateCaptcha("techCaptchaCanvas", "tech");
     });
   }
@@ -595,6 +723,13 @@ document.addEventListener("DOMContentLoaded", () => {
       const userInput = document.getElementById("cateringCaptchaInput").value.trim().toUpperCase();
       const errorMsg = document.getElementById("cateringCaptchaError");
       const captchaField = document.getElementById("cateringCaptchaInput");
+      const menuItemVal = document.getElementById("cat-menu-item").value;
+
+      if (!menuItemVal) {
+        alert("Please select a Primary Specialty from the menu.");
+        openCustomSelectModal("catMenu");
+        return;
+      }
 
       if (userInput !== generatedCateringCaptcha) {
         errorMsg.textContent = "Invalid verification code! Please try again.";
@@ -617,6 +752,8 @@ document.addEventListener("DOMContentLoaded", () => {
       window.open(`https://wa.me/919591509362?text=${message}`, "_blank");
 
       cateringForm.reset();
+      document.getElementById("cat-menu-display").value = "";
+      document.getElementById("cat-menu-item").value = "";
       generatedCateringCaptcha = generateCaptcha("cateringCaptchaCanvas", "catering");
     });
   }
