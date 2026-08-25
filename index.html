@@ -80,7 +80,6 @@
 
         <!-- Nav Actions -->
         <div class="nav-actions">
-          <!-- Install App Button -->
           <button class="nav-icon-btn install-pwa-btn" id="pwaInstallBtn" aria-label="Install App" title="Download & Install Web App">
             <i class="fa-solid fa-circle-down"></i>
           </button>
@@ -171,6 +170,27 @@
       </div>
       <div class="search-results-list" id="searchResultsList">
         <div class="search-hint">Type above to search across both businesses...</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Interactive Custom Dropdown Selection Modal (Matches Search UI) -->
+  <div class="custom-select-overlay" id="customSelectOverlay">
+    <div class="custom-select-modal">
+      <div class="custom-select-header">
+        <div class="custom-select-title-wrap">
+          <i class="fa-solid fa-list-check custom-select-header-icon" id="customSelectIcon"></i>
+          <div>
+            <h3 id="customSelectModalTitle">Select Option</h3>
+            <p id="customSelectModalSubtitle">Tap an item to choose</p>
+          </div>
+        </div>
+        <button class="custom-select-close-btn" id="customSelectCloseBtn" aria-label="Close Selector">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+      <div class="custom-select-list" id="customSelectList">
+        <!-- Rendered dynamically by script.js -->
       </div>
     </div>
   </div>
@@ -341,7 +361,7 @@
       </div>
     </section>
 
-    <!-- DYNAMIC & COLORFUL ENROLLMENT FORM -->
+    <!-- DYNAMIC & COLORFUL ENROLLMENT FORM WITH CUSTOM MODAL DROPDOWNS -->
     <section class="section form-section scroll-target" id="enroll-form">
       <div class="container form-wrapper form-tech-glow">
         <div class="form-header">
@@ -362,27 +382,22 @@
             <label for="tech-phone">Mobile / WhatsApp Number</label>
           </div>
 
-          <div class="input-floating-group">
+          <!-- Custom Modal Trigger for Course -->
+          <div class="input-floating-group custom-select-trigger-box" id="techCourseTrigger">
             <div class="input-icon-left"><i class="fa-solid fa-graduation-cap"></i></div>
-            <select id="tech-course" required>
-              <option value="" disabled selected hidden></option>
-              <option value="SAP ERP (FICO/MM/SD/EWM)">SAP ERP (FICO / MM / SD / EWM)</option>
-              <option value="Tally ERP / Prime">Tally ERP 10.0 / Prime</option>
-              <option value="Java / Python / C / C++">Programming (Java, Python, C, C++)</option>
-              <option value="MS Access / Advanced Excel">Advanced MS Access & Excel</option>
-              <option value="Basic Computer Course">Basic Computer Courses</option>
-              <option value="Corporate / Campus Training">Corporate & Campus Training</option>
-            </select>
-            <label for="tech-course">Course of Interest</label>
+            <input type="text" id="tech-course-display" placeholder=" " readonly required />
+            <input type="hidden" id="tech-course" required />
+            <label for="tech-course-display">Course of Interest</label>
+            <div class="select-chevron-icon"><i class="fa-solid fa-chevron-down"></i></div>
           </div>
 
-          <div class="input-floating-group">
+          <!-- Custom Modal Trigger for Mode -->
+          <div class="input-floating-group custom-select-trigger-box" id="techModeTrigger">
             <div class="input-icon-left"><i class="fa-solid fa-chalkboard-user"></i></div>
-            <select id="tech-mode" required>
-              <option value="Offline Classroom (Ballari)">Offline Classroom (Ballari)</option>
-              <option value="Online Live Training">Online Live Training</option>
-            </select>
-            <label for="tech-mode">Preferred Learning Mode</label>
+            <input type="text" id="tech-mode-display" placeholder=" " readonly required />
+            <input type="hidden" id="tech-mode" value="Offline Classroom (Ballari)" required />
+            <label for="tech-mode-display">Preferred Learning Mode</label>
+            <div class="select-chevron-icon"><i class="fa-solid fa-chevron-down"></i></div>
           </div>
 
           <!-- Dynamic Captcha Box -->
@@ -401,7 +416,7 @@
           </div>
 
           <button type="submit" class="btn btn-primary btn-glow btn-block">
-            <span>Submit Application on WhatsApp</span>
+            <span>Submit Application</span>
             <i class="fa-solid fa-arrow-right"></i>
           </button>
         </form>
@@ -628,7 +643,7 @@
       </div>
     </section>
 
-    <!-- DYNAMIC & COLORFUL FOOD ORDER FORM -->
+    <!-- DYNAMIC & COLORFUL FOOD ORDER FORM WITH CUSTOM MODAL DROPDOWNS -->
     <section class="section form-section bg-light scroll-target" id="order-form">
       <div class="container form-wrapper form-food-glow">
         <div class="form-header">
@@ -649,18 +664,13 @@
             <label for="cat-phone">Contact Phone Number</label>
           </div>
 
-          <div class="input-floating-group">
+          <!-- Custom Modal Trigger for Catering Menu Specialty -->
+          <div class="input-floating-group custom-select-trigger-box" id="catMenuTrigger">
             <div class="input-icon-left"><i class="fa-solid fa-utensils"></i></div>
-            <select id="cat-menu-item" required>
-              <option value="" disabled selected hidden></option>
-              <option value="Ballari Special Jigri">Ballari Special Jigri</option>
-              <option value="Mutton / Chicken Dum Biryani">Mutton / Chicken Dum Biryani</option>
-              <option value="Chicken Mandi / Afghani Pulav">Chicken Mandi / Afghani Pulav</option>
-              <option value="Mutton Nihari / Margh / Tahari">Mutton Nihari / Margh / Tahari</option>
-              <option value="Snacks & Burgers Combo (Mon/Sat)">Snacks, Pasta & Burgers Combo</option>
-              <option value="Bulk Party / Event Catering">Bulk Event / Party Catering</option>
-            </select>
-            <label for="cat-menu-item">Select Primary Specialty</label>
+            <input type="text" id="cat-menu-display" placeholder=" " readonly required />
+            <input type="hidden" id="cat-menu-item" required />
+            <label for="cat-menu-display">Select Primary Specialty</label>
+            <div class="select-chevron-icon"><i class="fa-solid fa-chevron-down"></i></div>
           </div>
 
           <div class="grid-2 form-row-grid">
@@ -692,7 +702,7 @@
           </div>
 
           <button type="submit" class="btn btn-food btn-glow-food btn-block">
-            <span>Send Catering Order on WhatsApp</span>
+            <span>Send Catering Order</span>
             <i class="fa-solid fa-utensils"></i>
           </button>
         </form>
