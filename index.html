@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>KMYZ Technologies | Software & ERP Training</title>
+  
+  <!-- Dynamic Favicon Link -->
+  <link id="dynamic-favicon" rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='25' fill='%231e40af'/><text x='50%' y='68%' font-size='55' font-family='sans-serif' font-weight='900' fill='white' text-anchor='middle'>K</text></svg>" />
+  
+  <!-- PWA Manifest & Meta Tags -->
+  <link rel="manifest" href="manifest.json" />
+  <meta name="theme-color" content="#1e40af" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="KMYZ & JN's" />
+
+  <link rel="stylesheet" href="style.css" />
+  <!-- Google Fonts & Font Awesome Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Mono:wght@700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+</head>
+<body data-theme="tech">
+
+  <!-- Dynamic PWA App Download Notification Toast / Floating Alert -->
+  <aside class="pwa-toast-alert" id="pwaToastAlert" aria-live="polite">
+    <div class="pwa-toast-content">
+      <div class="pwa-toast-icon" id="pwaToastIcon">
+        <i class="fa-solid fa-mobile-screen-button"></i>
+      </div>
+      <div class="pwa-toast-text">
+        <span class="pwa-toast-title" id="pwaToastTitle">Install KMYZ & JN App</span>
+        <span class="pwa-toast-desc">Get fast 1-tap offline access on your phone!</span>
+      </div>
+    </div>
+    <div class="pwa-toast-actions">
+      <button class="btn-pwa-install-action" id="toastInstallBtn">
+        <i class="fa-solid fa-download"></i> Install
+      </button>
+      <button class="btn-pwa-close-action" id="toastDismissBtn" aria-label="Dismiss Alert">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </div>
+  </aside>
+
+  <!-- Clean Sticky Header -->
+  <header class="main-header" id="mainHeader">
+    <!-- Desktop Top Venture Hub -->
+    <div class="top-hub desktop-only">
+      <div class="container hub-container">
+        <span class="hub-label"><i class="fa-solid fa-layer-group"></i> Switch Venture:</span>
+        <div class="hub-switch-btn-group">
+          <button id="switch-to-tech" class="hub-btn active">
+            <i class="fa-solid fa-laptop-code"></i> KMYZ Technologies
+          </button>
+          <button id="switch-to-catering" class="hub-btn">
+            <i class="fa-solid fa-utensils"></i> JN's Catering Services
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+      <div class="container nav-container">
+        <a href="#hero" class="brand-logo" data-scroll>
+          <span class="logo-icon" id="navLogoIcon"><i class="fa-solid fa-cubes"></i></span>
+          <span class="logo-text" id="nav-brand-title">KMYZ <span class="highlight">Technologies</span></span>
+        </a>
+        
+        <!-- Desktop Nav Links -->
+        <ul class="nav-links desktop-only" id="navLinks">
+          <li><a href="#hero" class="nav-item" data-scroll>Home</a></li>
+          <li><a href="#services-section" class="nav-item" id="nav-item-services" data-scroll>Services & Courses</a></li>
+          <li><a href="#features-section" class="nav-item" id="nav-item-features" data-scroll>Highlights</a></li>
+          <li><a href="#contact-section" class="nav-item" id="nav-item-contact" data-scroll>Contact & Book</a></li>
+        </ul>
+
+        <!-- Nav Actions -->
+        <div class="nav-actions">
+          <!-- Install App Button -->
+          <button class="nav-icon-btn install-pwa-btn" id="pwaInstallBtn" aria-label="Install App" title="Download & Install Web App">
+            <i class="fa-solid fa-circle-down"></i>
+          </button>
+          <button class="nav-icon-btn" id="openMapBtnNav" aria-label="Open Map Location" title="View Location Map">
+            <i class="fa-solid fa-map-location-dot"></i>
+          </button>
+          <button class="nav-icon-btn" id="searchTriggerBtn" aria-label="Open Search">
+            <i class="fa-solid fa-magnifying-glass"></i>
+          </button>
+          <a href="https://wa.me/919591509362" target="_blank" class="btn btn-whatsapp desktop-only">
+            <i class="fa-brands fa-whatsapp"></i> Chat Now
+          </a>
+          <button class="hamburger mobile-only" id="hamburgerBtn" aria-label="Toggle Navigation">
+            <span></span>
+            <span></span>
+            <span></span>
+          </button>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <!-- Mobile Navigation Slide-Out Drawer -->
+  <div class="drawer-overlay" id="drawerOverlay"></div>
+  <aside class="mobile-drawer" id="mobileDrawer">
+    <div class="drawer-header">
+      <div class="drawer-brand" id="drawerBrand">
+        <i class="fa-solid fa-cubes"></i>
+        <span>KMYZ Hub</span>
+      </div>
+      <button class="drawer-close-btn" id="drawerCloseBtn" aria-label="Close Menu">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </div>
+
+    <!-- Business Selector in Mobile Drawer -->
+    <div class="drawer-section">
+      <span class="drawer-section-title">Select Business</span>
+      <div class="mobile-switch-group">
+        <button id="mobile-switch-tech" class="m-switch-btn active">
+          <i class="fa-solid fa-laptop-code"></i> KMYZ Tech
+        </button>
+        <button id="mobile-switch-catering" class="m-switch-btn">
+          <i class="fa-solid fa-utensils"></i> JN's Catering
+        </button>
+      </div>
+    </div>
+
+    <!-- Mobile Menu Links -->
+    <div class="drawer-section">
+      <span class="drawer-section-title">Navigation</span>
+      <ul class="drawer-links">
+        <li><a href="#hero" class="drawer-item" data-scroll><i class="fa-solid fa-house"></i> Home</a></li>
+        <li><a href="#services-section" class="drawer-item" data-scroll><i class="fa-solid fa-list-check"></i> <span id="mNavServicesText">Courses & Modules</span></a></li>
+        <li><a href="#features-section" class="drawer-item" data-scroll><i class="fa-solid fa-star"></i> <span id="mNavFeaturesText">Highlights & Facilities</span></a></li>
+        <li><a href="#contact-section" class="drawer-item" data-scroll><i class="fa-solid fa-phone"></i> Contact & Address</a></li>
+        <li><a href="javascript:void(0)" id="drawerMapTrigger" class="drawer-item"><i class="fa-solid fa-map-location-dot"></i> Google Maps Location</a></li>
+        <li><a href="javascript:void(0)" id="drawerPwaInstall" class="drawer-item"><i class="fa-solid fa-cloud-arrow-down"></i> Install Web App</a></li>
+      </ul>
+    </div>
+
+    <!-- Mobile Drawer Actions -->
+    <div class="drawer-footer">
+      <a href="https://wa.me/919591509362" target="_blank" class="btn btn-whatsapp btn-block">
+        <i class="fa-brands fa-whatsapp"></i> Chat on WhatsApp
+      </a>
+      <a href="tel:9591509362" class="btn btn-outline btn-block">
+        <i class="fa-solid fa-phone-volume"></i> Call Direct
+      </a>
+    </div>
+  </aside>
+
+  <!-- Quick Search Modal Overlay -->
+  <div class="search-overlay" id="searchOverlay">
+    <div class="search-modal">
+      <div class="search-header">
+        <div class="search-input-wrapper">
+          <i class="fa-solid fa-magnifying-glass search-field-icon"></i>
+          <input type="text" id="globalSearchInput" placeholder="Search SAP, Python, Biryani, Burgers..." autocomplete="off" />
+          <button class="search-clear-btn" id="searchClearBtn"><i class="fa-solid fa-circle-xmark"></i></button>
+        </div>
+        <button class="search-close-btn" id="searchCloseBtn"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div class="search-filters">
+        <span class="filter-chip active" data-filter="all">All</span>
+        <span class="filter-chip" data-filter="tech">Tech & Courses</span>
+        <span class="filter-chip" data-filter="catering">Food & Catering</span>
+      </div>
+      <div class="search-results-list" id="searchResultsList">
+        <div class="search-hint">Type above to search across both businesses...</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Interactive Google Maps Modal Overlay -->
+  <div class="map-modal-overlay" id="mapModalOverlay">
+    <div class="map-modal-container">
+      <div class="map-modal-header">
+        <div class="map-modal-title">
+          <i class="fa-solid fa-location-dot"></i>
+          <div>
+            <h3>Mamoon Masjid Complex, Ballari</h3>
+            <p>Ist Floor, Besides Axis ATM, Belagal Cross, BALLARI – 583 102</p>
+          </div>
+        </div>
+        <button class="map-modal-close" id="mapModalCloseBtn" aria-label="Close Map"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div class="map-iframe-holder">
+        <iframe 
+          title="Business Location Map"
+          src="https://maps.google.com/maps?q=Mamoon+Masjid+Complex+Belagal+Cross+Ballari&t=&z=16&ie=UTF8&iwloc=&output=embed" 
+          width="100%" 
+          height="380" 
+          style="border:0;" 
+          allowfullscreen="" 
+          loading="lazy">
+        </iframe>
+      </div>
+      <div class="map-modal-footer">
+        <a href="https://www.google.com/maps/dir/?api=1&destination=Mamoon+Masjid+Complex+Belagal+Cross+Ballari" target="_blank" class="btn btn-primary btn-directions">
+          <i class="fa-solid fa-diamond-turn-right"></i> Open In Google Maps / Get Directions
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== SECTION 1: KMYZ TECHNOLOGIES ==================== -->
+  <div id="tech-venture" class="venture-view active-view">
+    
+    <!-- Hero Section -->
+    <section class="hero tech-hero scroll-target" id="hero">
+      <div class="container hero-grid">
+        <div class="hero-text fade-in-up">
+          <div class="badge-pill"><i class="fa-solid fa-award"></i> Experts In SAP ERP & Software Training</div>
+          <h1>Empower Your Career With Industry-Ready Tech Skills</h1>
+          <p>Gain in-depth knowledge and professional skills prepared to meet current and future enterprise standards. Unlock your dream career today.</p>
+          <div class="offer-banner">
+            <i class="fa-solid fa-tags"></i> 
+            <span><strong>20% OFF</strong> for the first 20 enrollments on all courses!</span>
+          </div>
+          <div class="hero-actions">
+            <a href="#enroll-form" class="btn btn-primary" data-scroll>Enroll Now</a>
+            <a href="#demo-schedule" class="btn btn-outline" data-scroll>View Demo Timings</a>
+          </div>
+        </div>
+        <div class="hero-image fade-in-up">
+          <div class="glass-card main-feature-card">
+            <h3><i class="fa-solid fa-graduation-cap"></i> Student Facilities</h3>
+            <ul class="facility-list">
+              <li><i class="fa-solid fa-circle-check"></i> Convenient lab timings & unlimited lab time</li>
+              <li><i class="fa-solid fa-circle-check"></i> Smart board and visual classroom sessions</li>
+              <li><i class="fa-solid fa-circle-check"></i> 100% dedicated post-course support</li>
+              <li><i class="fa-solid fa-circle-check"></i> Experienced faculty & personal 1-on-1 guidance</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Courses & Programs -->
+    <section class="section courses-section scroll-target" id="services-section">
+      <div class="container">
+        <div class="section-title">
+          <h2>Courses & Specializations</h2>
+          <p>Designed for students (8th Std to Post Graduates) & Working Professionals</p>
+        </div>
+
+        <div class="card-grid">
+          <div class="card interactive-card">
+            <div class="card-icon"><i class="fa-solid fa-network-wired"></i></div>
+            <h3>ERP Applications</h3>
+            <ul class="item-list">
+              <li>SAP ERP FICO (ECC & S/4 HANA)</li>
+              <li>SAP ERP MM (ECC & S/4 HANA)</li>
+              <li>SAP ERP SD (ECC & S/4 HANA)</li>
+              <li>SAP EWM Module (S/4 HANA)</li>
+              <li>Tally ERP 10.0 / Prime</li>
+            </ul>
+          </div>
+
+          <div class="card interactive-card">
+            <div class="card-icon"><i class="fa-solid fa-code"></i></div>
+            <h3>Software & Programming</h3>
+            <ul class="item-list">
+              <li>Core Java Development</li>
+              <li>"C" Language Fundamentals</li>
+              <li>C++ Object Oriented Programming</li>
+              <li>Python Full Stack Basics</li>
+              <li>.NET Framework Development</li>
+            </ul>
+          </div>
+
+          <div class="card interactive-card">
+            <div class="card-icon"><i class="fa-solid fa-desktop"></i></div>
+            <h3>Basic Computer Courses</h3>
+            <ul class="item-list">
+              <li>Basic Computer Concepts</li>
+              <li>MS Word Mastery</li>
+              <li>MS Excel Essentials</li>
+              <li>MS Power Point Presentations</li>
+              <li>Simple Database & Reporting Design</li>
+            </ul>
+          </div>
+
+          <div class="card interactive-card">
+            <div class="card-icon"><i class="fa-solid fa-chart-pie"></i></div>
+            <h3>Advanced Analytics & DB</h3>
+            <ul class="item-list">
+              <li>MS Access Database Management</li>
+              <li>MS Access Form & Report Design</li>
+              <li>MS Access Complex Query Design</li>
+              <li>MS Excel Advanced Concepts & Macros</li>
+              <li>Visualization & Reporting Tools</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Consultancy, Services & Demo Details -->
+    <section class="section bg-light scroll-target" id="features-section">
+      <div class="container">
+        <div class="grid-2">
+          <div class="info-box">
+            <h3><i class="fa-solid fa-briefcase"></i> Corporate & Campus Training</h3>
+            <p>We deliver comprehensive technical support and custom solutions for institutions and businesses:</p>
+            <div class="tag-cloud">
+              <span>Corporate Training</span>
+              <span>Classroom Training</span>
+              <span>Campus Training</span>
+              <span>Interview Guidance</span>
+              <span>SAP Server Access</span>
+              <span>Customized Billing</span>
+              <span>Application Development</span>
+              <span>Customized Statements & Templates</span>
+            </div>
+          </div>
+
+          <div class="info-box demo-box scroll-target" id="demo-schedule">
+            <h3><i class="fa-solid fa-calendar-check"></i> Free Demo Classes</h3>
+            <p>Experience our teaching quality firsthand with offline & online sessions.</p>
+            <div class="schedule-card">
+              <div class="schedule-row">
+                <span class="day">Saturday (SAP FICO / MM)</span>
+                <span class="time">11:00 AM & 05:00 PM</span>
+              </div>
+              <div class="schedule-row">
+                <span class="day">Sunday (SAP FICO / MM)</span>
+                <span class="time">10:00 AM</span>
+              </div>
+              <div class="schedule-row">
+                <span class="day">Online Demo</span>
+                <span class="time">Available on request</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- DYNAMIC & COLORFUL ENROLLMENT FORM -->
+    <section class="section form-section scroll-target" id="enroll-form">
+      <div class="container form-wrapper form-tech-glow">
+        <div class="form-header">
+          <div class="form-badge-chip tech-chip"><i class="fa-solid fa-bolt"></i> Fast-Track Admission</div>
+          <h2>Enroll / Request Syllabus</h2>
+          <p>Fill out the application below to reserve your seat and claim your 20% discount.</p>
+        </div>
+        <form class="custom-form dynamic-form" id="techEnrollForm">
+          <div class="input-floating-group">
+            <div class="input-icon-left"><i class="fa-solid fa-user"></i></div>
+            <input type="text" id="tech-name" placeholder=" " required />
+            <label for="tech-name">Full Candidate Name</label>
+          </div>
+
+          <div class="input-floating-group">
+            <div class="input-icon-left"><i class="fa-solid fa-phone"></i></div>
+            <input type="tel" id="tech-phone" placeholder=" " required />
+            <label for="tech-phone">Mobile / WhatsApp Number</label>
+          </div>
+
+          <div class="input-floating-group">
+            <div class="input-icon-left"><i class="fa-solid fa-graduation-cap"></i></div>
+            <select id="tech-course" required>
+              <option value="" disabled selected hidden></option>
+              <option value="SAP ERP (FICO/MM/SD/EWM)">SAP ERP (FICO / MM / SD / EWM)</option>
+              <option value="Tally ERP / Prime">Tally ERP 10.0 / Prime</option>
+              <option value="Java / Python / C / C++">Programming (Java, Python, C, C++)</option>
+              <option value="MS Access / Advanced Excel">Advanced MS Access & Excel</option>
+              <option value="Basic Computer Course">Basic Computer Courses</option>
+              <option value="Corporate / Campus Training">Corporate & Campus Training</option>
+            </select>
+            <label for="tech-course">Course of Interest</label>
+          </div>
+
+          <div class="input-floating-group">
+            <div class="input-icon-left"><i class="fa-solid fa-chalkboard-user"></i></div>
+            <select id="tech-mode" required>
+              <option value="Offline Classroom (Ballari)">Offline Classroom (Ballari)</option>
+              <option value="Online Live Training">Online Live Training</option>
+            </select>
+            <label for="tech-mode">Preferred Learning Mode</label>
+          </div>
+
+          <!-- Dynamic Captcha Box -->
+          <div class="captcha-container">
+            <label class="captcha-label"><i class="fa-solid fa-shield-halved"></i> Verification Code</label>
+            <div class="captcha-box-row">
+              <div class="captcha-canvas-wrap">
+                <canvas id="techCaptchaCanvas" width="140" height="42"></canvas>
+                <button type="button" class="btn-refresh-captcha" id="refreshTechCaptcha" aria-label="Refresh Captcha">
+                  <i class="fa-solid fa-arrows-rotate"></i>
+                </button>
+              </div>
+              <input type="text" id="techCaptchaInput" class="captcha-input-field" placeholder="Enter code" autocomplete="off" maxlength="6" required />
+            </div>
+            <span class="captcha-error-msg" id="techCaptchaError"></span>
+          </div>
+
+          <button type="submit" class="btn btn-primary btn-glow btn-block">
+            <span>Submit Application on WhatsApp</span>
+            <i class="fa-solid fa-arrow-right"></i>
+          </button>
+        </form>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- ==================== SECTION 2: JN'S CATERING SERVICES ==================== -->
+  <div id="catering-venture" class="venture-view">
+    
+    <!-- Catering Hero -->
+    <section class="hero catering-hero scroll-target" id="catering-hero">
+      <div class="container hero-grid">
+        <div class="hero-text fade-in-up">
+          <div class="badge-pill badge-food"><i class="fa-solid fa-bowl-hot"></i> Freshly Cooked On Order Only</div>
+          <h1>Original Ingredients, Authentic Taste & Pure Quality</h1>
+          <p>Delight your guests and family with authentic Ballari delicacies, slow-cooked Dum Biryanis, rich gravies, and delicious snacks.</p>
+          <div class="catering-badges">
+            <span><i class="fa-solid fa-leaf"></i> Natural Taste</span>
+            <span><i class="fa-solid fa-heart-pulse"></i> Healthy Food</span>
+            <span><i class="fa-solid fa-fire"></i> Fresh Preparation</span>
+          </div>
+          <div class="hero-actions">
+            <a href="#catering-calculator" class="btn btn-food" data-scroll><i class="fa-solid fa-calculator"></i> Cost & Portion Estimator</a>
+            <a href="#menu-section" class="btn btn-outline" data-scroll>Explore Menu</a>
+          </div>
+        </div>
+        <div class="hero-image fade-in-up">
+          <div class="food-highlight-card">
+            <div class="chef-icon"><i class="fa-solid fa-kitchen-set"></i></div>
+            <h3>Chef's Signature</h3>
+            <p class="specialty-title">Ballari Special Jigri & Dum Biryani</p>
+            <p class="specialty-desc">Made with traditional spices and slow-cooked perfection for special occasions and bulk orders.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- INTERACTIVE EVENT COST & PORTION ESTIMATOR -->
+    <section class="section calculator-section scroll-target" id="catering-calculator">
+      <div class="container">
+        <div class="section-title">
+          <h2><i class="fa-solid fa-calculator text-red"></i> Event Cost & Portion Estimator</h2>
+          <p>Select your favorite dishes and guest headcount to view instant live pricing and recommended portions.</p>
+        </div>
+
+        <div class="calc-card-container">
+          <div class="calc-grid">
+            <!-- Left: Dish Selection & Headcount -->
+            <div class="calc-left">
+              <div class="calc-section-box">
+                <div class="headcount-header">
+                  <label for="guestSlider"><strong>1. Estimated Guests / Headcount:</strong></label>
+                  <span class="guest-counter-badge" id="guestCountDisplay">50 Guests</span>
+                </div>
+                <input type="range" id="guestSlider" min="20" max="500" step="5" value="50" class="custom-slider" />
+                <div class="slider-marks">
+                  <span>20 Packs</span>
+                  <span>100</span>
+                  <span>250</span>
+                  <span>500+ Packs</span>
+                </div>
+              </div>
+
+              <div class="calc-section-box">
+                <label class="calc-sub-title"><strong>2. Select Menu Items:</strong></label>
+                <div class="dish-selection-grid" id="dishSelectionGrid">
+                  <label class="dish-check-card">
+                    <input type="checkbox" class="dish-checkbox" value="Ballari Special Jigri" data-price="180" data-portion="1 plate" checked />
+                    <div class="dish-check-content">
+                      <span class="dish-name">Ballari Special Jigri</span>
+                      <span class="dish-rate">₹180 / plate</span>
+                    </div>
+                  </label>
+
+                  <label class="dish-check-card">
+                    <input type="checkbox" class="dish-checkbox" value="Mutton Dum Biryani" data-price="220" data-portion="350g" checked />
+                    <div class="dish-check-content">
+                      <span class="dish-name">Mutton Dum Biryani</span>
+                      <span class="dish-rate">₹220 / pack</span>
+                    </div>
+                  </label>
+
+                  <label class="dish-check-card">
+                    <input type="checkbox" class="dish-checkbox" value="Chicken Dum Biryani" data-price="160" data-portion="350g" />
+                    <div class="dish-check-content">
+                      <span class="dish-name">Chicken Dum Biryani</span>
+                      <span class="dish-rate">₹160 / pack</span>
+                    </div>
+                  </label>
+
+                  <label class="dish-check-card">
+                    <input type="checkbox" class="dish-checkbox" value="Chicken Mandi / Afghani Pulav" data-price="190" data-portion="1 serving" />
+                    <div class="dish-check-content">
+                      <span class="dish-name">Chicken Mandi / Afghani Pulav</span>
+                      <span class="dish-rate">₹190 / serving</span>
+                    </div>
+                  </label>
+
+                  <label class="dish-check-card">
+                    <input type="checkbox" class="dish-checkbox" value="Mutton Nihari / Margh" data-price="200" data-portion="1 bowl" />
+                    <div class="dish-check-content">
+                      <span class="dish-name">Mutton Nihari / Margh</span>
+                      <span class="dish-rate">₹200 / serving</span>
+                    </div>
+                  </label>
+
+                  <label class="dish-check-card">
+                    <input type="checkbox" class="dish-checkbox" value="Chole Bhature / Pav Bhaji Combo" data-price="100" data-portion="2 pcs / plate" />
+                    <div class="dish-check-content">
+                      <span class="dish-name">Chole Bhature / Pav Bhaji</span>
+                      <span class="dish-rate">₹100 / plate</span>
+                    </div>
+                  </label>
+
+                  <label class="dish-check-card">
+                    <input type="checkbox" class="dish-checkbox" value="Burgers & Pasta Combo" data-price="120" data-portion="1 combo" />
+                    <div class="dish-check-content">
+                      <span class="dish-name">Pasta & Burgers Snack Combo</span>
+                      <span class="dish-rate">₹120 / set</span>
+                    </div>
+                  </label>
+
+                  <label class="dish-check-card">
+                    <input type="checkbox" class="dish-checkbox" value="Traditional Shahi Sweet / Dessert" data-price="50" data-portion="1 cup" checked />
+                    <div class="dish-check-content">
+                      <span class="dish-name">Special Shahi Dessert</span>
+                      <span class="dish-rate">₹50 / cup</span>
+                    </div>
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <!-- Right: Live Cost & Portion Breakdown -->
+            <div class="calc-right">
+              <div class="quote-summary-card">
+                <div class="quote-header">
+                  <i class="fa-solid fa-file-invoice-dollar"></i>
+                  <h3>Live Estimate Breakdown</h3>
+                </div>
+
+                <div class="quote-stat-row">
+                  <span>Per Plate / Person Cost:</span>
+                  <strong class="quote-stat-val" id="calcPerPlateRate">₹450</strong>
+                </div>
+
+                <div class="quote-stat-row">
+                  <span>Selected Dishes:</span>
+                  <span id="calcSelectedCount">3 items</span>
+                </div>
+
+                <div class="quote-portion-box">
+                  <span class="portion-title"><i class="fa-solid fa-boxes-stacked"></i> Estimated Total Food Quantity:</span>
+                  <ul class="portion-list" id="calcPortionList">
+                    <!-- Dynamic Portions inserted by JS -->
+                  </ul>
+                </div>
+
+                <div class="quote-total-box">
+                  <span class="total-label">Estimated Total:</span>
+                  <span class="total-amount" id="calcGrandTotal">₹22,500</span>
+                </div>
+
+                <button class="btn btn-food btn-block btn-quote-wa" id="btnExportQuoteToWa">
+                  <i class="fa-brands fa-whatsapp"></i> Book Quote via WhatsApp
+                </button>
+                <p class="calc-disclaimer">*Final charges may vary based on customized packaging, on-site service, or special garnishing requests.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Menu Section with Live Day-of-the-Week Highlighter -->
+    <section class="section scroll-target" id="menu-section">
+      <div class="container">
+        <div class="section-title">
+          <h2>Our Specialty Menu Schedule</h2>
+          <p id="todayLiveStatusText">Checking today's menu availability...</p>
+        </div>
+
+        <div class="grid-2 menu-grid-layout">
+          <!-- Mon & Sat Card -->
+          <div class="menu-card" id="card-mon-sat">
+            <div class="today-ribbon" id="ribbon-mon-sat"><i class="fa-solid fa-bell-concierge"></i> COOKING TODAY!</div>
+            <div class="menu-header">
+              <i class="fa-solid fa-calendar-day"></i>
+              <h3>Monday & Saturday Special</h3>
+              <span class="tag">Breakfast, Fast Food & Snacks</span>
+            </div>
+            <ul class="menu-list">
+              <li><span>Chole Bhature</span> <span class="badge-item">Hot Favorite</span></li>
+              <li><span>Puri and Saag</span> <span class="badge-item">Traditional</span></li>
+              <li><span>Pav Bhaji</span> <span class="badge-item">Butter Rich</span></li>
+              <li><span>Vada Pav</span> <span class="badge-item">Crispy</span></li>
+              <li><span>White Sauce Pasta</span> <span class="badge-item">Creamy</span></li>
+              <li><span>Chicken Sandwich & Cheese Corn Sandwich</span> <span class="badge-item">Fresh</span></li>
+              <li><span>Chicken Burger & Aloo Tikki Burger</span> <span class="badge-item">Crunchy</span></li>
+            </ul>
+          </div>
+
+          <!-- Sun & Wed Card -->
+          <div class="menu-card" id="card-sun-wed">
+            <div class="today-ribbon" id="ribbon-sun-wed"><i class="fa-solid fa-bell-concierge"></i> COOKING TODAY!</div>
+            <div class="menu-header">
+              <i class="fa-solid fa-drumstick-bite"></i>
+              <h3>Sunday & Wednesday Special</h3>
+              <span class="tag">Royal Feasts & Biryani Delights</span>
+            </div>
+            <ul class="menu-list">
+              <li><span>Ballari Special Jigri</span> <span class="badge-item signature">Specialty</span></li>
+              <li><span>Mutton Biryani & Chicken Biryani</span> <span class="badge-item signature">Dum Cooked</span></li>
+              <li><span>Chicken Mandi</span> <span class="badge-item">Arabian Style</span></li>
+              <li><span>Mutton Afghani Pulav</span> <span class="badge-item">Royal Taste</span></li>
+              <li><span>Chicken Fried Rice</span> <span class="badge-item">Wok Tossed</span></li>
+              <li><span>Mutton Nihari</span> <span class="badge-item">Slow Cooked</span></li>
+              <li><span>Mutton Margh & Mutton Tahari</span> <span class="badge-item">Authentic</span></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- DYNAMIC & COLORFUL FOOD ORDER FORM -->
+    <section class="section form-section bg-light scroll-target" id="order-form">
+      <div class="container form-wrapper form-food-glow">
+        <div class="form-header">
+          <div class="form-badge-chip food-chip"><i class="fa-solid fa-fire"></i> Fresh Meal Booking</div>
+          <h2>Order Catering / Book Event Meal</h2>
+          <p>Tell us your event date, headcount, and preferred Ballari specialties.</p>
+        </div>
+        <form class="custom-form dynamic-form" id="cateringOrderForm">
+          <div class="input-floating-group">
+            <div class="input-icon-left"><i class="fa-solid fa-user-tag"></i></div>
+            <input type="text" id="cat-name" placeholder=" " required />
+            <label for="cat-name">Your Full Name</label>
+          </div>
+
+          <div class="input-floating-group">
+            <div class="input-icon-left"><i class="fa-solid fa-phone"></i></div>
+            <input type="tel" id="cat-phone" placeholder=" " required />
+            <label for="cat-phone">Contact Phone Number</label>
+          </div>
+
+          <div class="input-floating-group">
+            <div class="input-icon-left"><i class="fa-solid fa-utensils"></i></div>
+            <select id="cat-menu-item" required>
+              <option value="" disabled selected hidden></option>
+              <option value="Ballari Special Jigri">Ballari Special Jigri</option>
+              <option value="Mutton / Chicken Dum Biryani">Mutton / Chicken Dum Biryani</option>
+              <option value="Chicken Mandi / Afghani Pulav">Chicken Mandi / Afghani Pulav</option>
+              <option value="Mutton Nihari / Margh / Tahari">Mutton Nihari / Margh / Tahari</option>
+              <option value="Snacks & Burgers Combo (Mon/Sat)">Snacks, Pasta & Burgers Combo</option>
+              <option value="Bulk Party / Event Catering">Bulk Event / Party Catering</option>
+            </select>
+            <label for="cat-menu-item">Select Primary Specialty</label>
+          </div>
+
+          <div class="grid-2 form-row-grid">
+            <div class="input-floating-group">
+              <div class="input-icon-left"><i class="fa-solid fa-calendar-days"></i></div>
+              <input type="date" id="cat-date" required />
+              <label for="cat-date" class="label-date-fixed">Delivery Date</label>
+            </div>
+            <div class="input-floating-group">
+              <div class="input-icon-left"><i class="fa-solid fa-users"></i></div>
+              <input type="number" id="cat-quantity" placeholder=" " min="1" required />
+              <label for="cat-quantity">Guests / Packs</label>
+            </div>
+          </div>
+
+          <!-- Dynamic Captcha Box -->
+          <div class="captcha-container">
+            <label class="captcha-label"><i class="fa-solid fa-shield-halved"></i> Verification Code</label>
+            <div class="captcha-box-row">
+              <div class="captcha-canvas-wrap">
+                <canvas id="cateringCaptchaCanvas" width="140" height="42"></canvas>
+                <button type="button" class="btn-refresh-captcha" id="refreshCateringCaptcha" aria-label="Refresh Captcha">
+                  <i class="fa-solid fa-arrows-rotate"></i>
+                </button>
+              </div>
+              <input type="text" id="cateringCaptchaInput" class="captcha-input-field" placeholder="Enter code" autocomplete="off" maxlength="6" required />
+            </div>
+            <span class="captcha-error-msg" id="cateringCaptchaError"></span>
+          </div>
+
+          <button type="submit" class="btn btn-food btn-glow-food btn-block">
+            <span>Send Catering Order on WhatsApp</span>
+            <i class="fa-solid fa-utensils"></i>
+          </button>
+        </form>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- Shared Universal Footer & Location Info -->
+  <footer class="footer scroll-target" id="contact-section">
+    <div class="container footer-grid">
+      <div class="footer-col">
+        <h3 class="footer-title">Common Business Address</h3>
+        <p class="address-line">
+          <i class="fa-solid fa-location-dot"></i>
+          Ist Floor, Besides Axis ATM, Mamoon Masjid Complex, Belagal Cross, BALLARI – 583 102.
+        </p>
+        <button class="btn btn-outline footer-map-btn" id="footerMapBtn">
+          <i class="fa-solid fa-map"></i> View Location on Map
+        </button>
+      </div>
+
+      <div class="footer-col">
+        <h3 class="footer-title">Direct Contact Numbers</h3>
+        <ul class="contact-links">
+          <li><i class="fa-solid fa-phone"></i> +91 95915 09362</li>
+          <li><i class="fa-solid fa-phone"></i> +91 73497 52919</li>
+          <li><i class="fa-solid fa-phone"></i> +91 70906 34920</li>
+          <li><i class="fa-brands fa-whatsapp"></i> WhatsApp: 95915 09362</li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h3 class="footer-title">Official Inquiries</h3>
+        <p><i class="fa-solid fa-envelope"></i> <strong>Tech:</strong> Myztechnologies@gmail.com</p>
+        <p><i class="fa-solid fa-envelope"></i> <strong>Catering:</strong> jnskmyz@gmail.com</p>
+        <div class="social-pills">
+          <a href="https://wa.me/919591509362" target="_blank" aria-label="WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
+          <a href="mailto:Myztechnologies@gmail.com" aria-label="Email Tech"><i class="fa-solid fa-envelope"></i></a>
+          <a href="tel:9591509362" aria-label="Call Direct"><i class="fa-solid fa-phone"></i></a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; <span id="currentYear"></span> KMYZ Technologies & JN's Catering Services. All Rights Reserved.</p>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
